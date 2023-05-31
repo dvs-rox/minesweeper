@@ -1,0 +1,40 @@
+
+
+table{
+    padding-top: calc(1vh);
+    margin: auto;
+}
+body{
+    background-color: antiquewhite;
+}
+h1{
+    text-align: center;
+}
+.boardContainer tr td{
+    border:2px solid grey;
+    width: 2em;
+    height: 2em;
+    font-size: 2em;
+    text-align: center;
+}
+.cell{
+    background-color: rgb(251, 215, 174);
+}
+.hidden{
+    color:transparent;
+    background-color: darkgray;
+}
+footer{
+    position: absolute;
+    bottom: 0px;
+    text-align: center;
+    /* padding-bottom: 10px; */
+    background-color: aliceblue;
+    width:100%;
+    height: 30px;
+    left:0%;
+}
+footer p{
+    padding-top: calc((30px / 2) - (1em / 2));
+    margin: auto;
+}
