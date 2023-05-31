@@ -58,8 +58,8 @@
 body {
     background-color: var(--background-color);
     background-image: url('../img/background.jpg');
-    background-position: top left;
-    background-size: 120vw;
+    background-position:center;
+    background-size: auto 130vh;
     background-repeat: no-repeat;
 
 }
@@ -86,9 +86,9 @@ td img {
 
 .boardContainer tr td {
     border: 2px solid grey;
-    width: 2em;
-    height: 2em;
-    font-size: 2em;
+    width: 1em;
+    height: 1em;
+    font-size: 1em;
     text-align: center;
 }
 

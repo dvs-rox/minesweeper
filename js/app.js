@@ -7,7 +7,8 @@ var gElModal = document.querySelector('.modal')
 var gBoard = []
 var gLevel = {
     SIZE: 6,
-    MINES: 0
+    MINES: 0,
+    MINEPERCENTAGE: 0
 }
 var gGame = {
     isOn: false,
@@ -28,6 +29,7 @@ var gGame = {
 
 
 function onInit() {
+    setDifficulty()
     //reset vars
     resetVars()
     //build data model
@@ -36,7 +38,7 @@ function onInit() {
     renderBoard()
     updateLifeImage()
 }
-function resetVars(){
+function resetVars() {
     gElModal.style.visibility = 'hidden'
     gGame.isVictory = false
     gGame.isFirstClick = true
@@ -46,6 +48,7 @@ function resetVars(){
     gBoard = []
 }
 function buildBoard(size = gLevel.SIZE) {
+    console.log(gLevel.SIZE)
     for (var i = 0; i < size; i++) {
         gBoard.push([])
         for (var j = 0; j < size; j++) {
@@ -64,8 +67,6 @@ function buildBoard(size = gLevel.SIZE) {
         }
 
     }
-    // gBoard[0][1].cell.isMine = true
-    console.table(gBoard)
 }
 function renderBoard() {
     var strHtml = ''
@@ -143,11 +144,6 @@ function renderCell(i, j) {
 }
 function checkGameOver() {
     //if all empty cells are revealed and all mines are marked
-    // console.log('gGame.markedCount :', gGame.markedCount)
-    // console.log('gLevel.MINES :', gLevel.MINES)
-    // console.log('gBoard.size :', gLevel.SIZE)
-    // console.log('gBoard.size*gBoard.size :', Math.pow(gLevel.SIZE, 2))
-    // console.log('gLevel.MINES :', gLevel.MINES)
 
     if (gGame.markedCount === gLevel.MINES && gGame.shownCount === (Math.pow(gLevel.SIZE, 2) - gLevel.MINES)) {
         gGame.isOn = false
@@ -223,5 +219,25 @@ function expandShown(board, row, col) {
                 gGame.shownCount++
             }
         }
+    }
+}
+function setDifficulty() {
+    var elSelect = document.querySelector('select')
+    // debugger
+    switch (elSelect.value) {
+        case 'easy':
+            gLevel.SIZE = 4
+            gLevel.MINEPERCENTAGE = 12.5
+            break;
+        case 'medium':
+            gLevel.SIZE = 8
+            gLevel.MINEPERCENTAGE = 21.875
+            break;
+        case 'hard':
+            gLevel.SIZE = 12
+            gLevel.MINEPERCENTAGE = 22.222
+            break;
+        default:
+            break;
     }
 }
