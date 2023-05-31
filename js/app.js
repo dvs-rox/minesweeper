@@ -94,16 +94,24 @@ function onCellClick(elCell, i, j) { //please excuse this absolute UNIT of a fun
         checkGameOver()
         return
     }
+    if(cell.isMarked&& !cell.isMine){
+        onMark(elCell)
+        showCell(gBoard, i,j,elCell)
+    }
     if (cell.isMarked || cell.isShown) return//prevents revealing makred cell and needlessly marking marked cell
     if (!cell.isShown) {//clicking a cell that isn't shown and isn't a mine
-        gGame.shownCount++
-        cell.isShown = true
-        elCell.classList.remove('.hidden')
-        expandShown(gBoard, i, j)
+        showCell(gBoard, i,j,elCell)
     }
     minesNegsCount(i, j)
     renderCell(i, j)
     checkGameOver()
+}
+function showCell(board, i,j, elCell){
+    var cell = gBoard[i][j]
+    gGame.shownCount++
+    cell.isShown = true
+    elCell.classList.remove('.hidden')
+    expandShown(board, i, j)
 }
 function renderCell(i, j) {
     var cell = gBoard[i][j]
@@ -128,7 +136,13 @@ function renderCell(i, j) {
 }
 function checkGameOver() {
     //if all empty cells are revealed and all mines are marked
-    if (gGame.markedCount >= gLevel.MINES && gGame.shownCount === (gBoard.size**2 - gLevel.MINES)) {
+    // console.log('gGame.markedCount :', gGame.markedCount)
+    // console.log('gLevel.MINES :', gLevel.MINES)
+    // console.log('gBoard.size :', gLevel.SIZE)
+    // console.log('gBoard.size*gBoard.size :', Math.pow(gLevel.SIZE, 2))
+    // console.log('gLevel.MINES :', gLevel.MINES)
+
+    if (gGame.markedCount === gLevel.MINES && gGame.shownCount === (Math.pow(gLevel.SIZE, 2) - gLevel.MINES)) {
         gGame.isOn = false
         gGame.isVictory = true
         updateLifeImage()
@@ -186,6 +200,7 @@ function expandShown(board, row, col) {
         for (var j = col - 1; j <= col + 1; j++) {
             if (j < 0 || j > board[0].length - 1) continue
             if (i === row && j === col) continue
+            if(gBoard[i][j].isMarked) continue
             if (gBoard[i][j].isMine) continue
             if (!gBoard[i][j].isShown) {
                 // debugger

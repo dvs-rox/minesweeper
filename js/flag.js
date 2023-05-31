@@ -12,6 +12,7 @@ addEventListener(`contextmenu`, (e) => { //prevents opening content menu while s
 });
 
 function onMark(elCell) {
+    if(gGame.isFirstClick)return
     if(!gGame.isOn) return
     var cell = gBoard[elCell.dataset.i][elCell.dataset.j]
     if(cell.isShown) return
@@ -22,7 +23,7 @@ function onMark(elCell) {
     }else{
         gGame.markedCount++
         cell.isMarked = true
-        elCell.classList.remove('hidden')
+        if(cell.isMine || !cell.isShown) elCell.classList.remove('hidden')
     }
     console.log('gGame.markedCount :', gGame.markedCount)
     renderCell(elCell.dataset.i, elCell.dataset.j)
