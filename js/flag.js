@@ -7,12 +7,12 @@
 //     isMine: false,
 //     isMarked: false
 // }
-addEventListener(`contextmenu`, (e) => {
+addEventListener(`contextmenu`, (e) => { //prevents opening content menu while still allowing right click event to happen
     e.preventDefault();
 });
 
 function onMark(elCell) {
-    // debugger
+    if(!gGame.isOn) return
     var cell = gBoard[elCell.dataset.i][elCell.dataset.j]
     if(cell.isShown) return
     if(cell.isMarked){

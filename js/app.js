@@ -14,7 +14,8 @@ var gGame = {
     markedCount: 0,
     secsPassed: 0,
     lives: 3,
-    isFirstClick: true
+    isFirstClick: true,
+    isVictory: false
 }
 //reference for cell object structure
 // var cell ={
@@ -26,10 +27,16 @@ var gGame = {
 
 
 function onInit() {
+    //reset vars
+    gGame.isVictory = false
+    gGame.isFirstClick = true
+    gGame.isOn = true
+    gGame.lives = 3
     //build data model
     buildBoard()
     //build DOM
     renderBoard()
+    updateLifeImage()
 }
 function buildBoard(size = gLevel.SIZE) {
     for (var i = 0; i < size; i++) {
@@ -66,34 +73,34 @@ function renderBoard() {
 
     document.querySelector(".boardContainer").innerHTML = strHtml
 }
-function onCellClick(elCell, i, j) {
-    //TODO: add scenarios for flagging, mines, empty spaces & counted neighbors
-    
-    if(gGame.isFirstClick) {
+function onCellClick(elCell, i, j) { //please excuse this absolute UNIT of a function, it triggers most things and is nearly unreadable so I added tons of comments :^)
+    if (!gGame.isOn) return
+    //scenarios for flagging, mines, empty spaces & counted neighbors
+    if (gGame.isFirstClick) {//handles first turn not landing on a mine
         plantRandomMines(gBoard)
         gBoard[i][j].isMine = false
         gGame.isFirstClick = false
     }
     var cell = gBoard[i][j]
-    if (cell.isMine) {
-        console.log('BOOM')
-        elCell.classList.remove('hidden')
-        if (!cell.isShown) {
+    if (cell.isMine) { //clicked cell is mine scenario
+        if (!cell.isShown && !cell.isMarked) { // prevents clicking revealed or flagged bomb reducing life count
             gGame.lives--
+            gGame.markedCount++
+            updateLifeImage()//changes face icon
         }
+        document.querySelector('td span').innerText = gGame.lives//updates lifecounter in DOM
         cell.isShown = true
         renderCell(i, j)
         checkGameOver()
         return
     }
-    if (cell.isMarked || cell.isShown) return
-    if (!cell.isShown) {
+    if (cell.isMarked || cell.isShown) return//prevents revealing makred cell and needlessly marking marked cell
+    if (!cell.isShown) {//clicking a cell that isn't shown and isn't a mine
         gGame.shownCount++
         cell.isShown = true
         elCell.classList.remove('.hidden')
         expandShown(gBoard, i, j)
     }
-    console.log('gGame.shownCount :', gGame.shownCount)
     minesNegsCount(i, j)
     renderCell(i, j)
     checkGameOver()
@@ -122,11 +129,58 @@ function renderCell(i, j) {
 function checkGameOver() {
     //if all empty cells are revealed and all mines are marked
     if (gGame.markedCount >= gLevel.MINES && gGame.markedCount === (gLevel.SIZE ** 2 - gGame.shownCount)) {
+        debugger
+        gGame.isOn = false
+        gGame.isVictory = true
+        updateLifeImage()
         alert('victory!')
     }
     if (gGame.lives === 0) {
+        debugger
         alert('loss')
+        gGame.isVictory = false
+        gGame.isOn = false
     }
+}
+function updateLifeImage() {//handles change of face icon
+    var elImg = document.querySelector('td img')
+    console.log(gGame.isVictory)
+    if (gGame.isVictory === true) {
+        switch (gGame.lives) {
+            case 3:
+                elImg.src = 'img/lifecount/win-3.png'
+                break
+            case 2:
+                elImg.src = 'img/lifecount/win-2.png'
+                break
+            case 1:
+                elImg.src = 'img/lifecount/win-1.png'
+                break
+            default:
+                elImg.src = 'img/lifecount/3.png'
+                break
+        }
+
+    } else {
+        switch (gGame.lives) {
+            case 3:
+                elImg.src = 'img/lifecount/3.png'
+                break
+            case 2:
+                elImg.src = 'img/lifecount/2.png'
+                break
+            case 1:
+                elImg.src = 'img/lifecount/1.png'
+                break
+            case 0:
+                elImg.src = 'img/lifecount/0.png'
+                break
+            default:
+                elImg.src = 'img/lifecount/3.png'
+                break
+        }
+    }
+
 }
 function expandShown(board, row, col) {
     for (var i = row - 1; i <= row + 1; i++) {

@@ -7,7 +7,7 @@ function addMine(i, j) {//sets cell property isMine to true, does not render cel
 }
 function plantRandomMines(board){
     gLevel.MINES = 0
-    var odds = 0.3 //odds a mine will be placed
+    var odds = 0.2 //odds a mine will be placed
     for(var i = 0; i<board.length; i++){
         for(var j = 0; j<board.length;j++){
             if(Math.random()<=odds && !board[i][j].isShown){
