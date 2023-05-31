@@ -12,6 +12,20 @@
     font-style: normal;
 }
 
+
+.modal{
+    visibility: visible;
+    color: aliceblue;
+    width: 300px;
+    height: 130px;
+    position: absolute;
+    background-color: #0D1B1E;
+    left:calc(50vw - 150px);
+    border: 3px solid white;
+    vertical-align: middle;
+    padding: 10px;
+    text-align: center;
+}
 .boardContainer {
     /* padding-top: calc(1vh); */
     border: 2px solid #BBCFD6;

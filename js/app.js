@@ -3,10 +3,11 @@ const MINE = '🧨'
 const FLAG = '🚩'
 const EMPTY = ' '
 
+var gElModal = document.querySelector('.modal')
 var gBoard = []
 var gLevel = {
     SIZE: 6,
-    MINES: 1
+    MINES: 0
 }
 var gGame = {
     isOn: false,
@@ -28,15 +29,21 @@ var gGame = {
 
 function onInit() {
     //reset vars
-    gGame.isVictory = false
-    gGame.isFirstClick = true
-    gGame.isOn = true
-    gGame.lives = 3
+    resetVars()
     //build data model
     buildBoard()
     //build DOM
     renderBoard()
     updateLifeImage()
+}
+function resetVars(){
+    gElModal.style.visibility = 'hidden'
+    gGame.isVictory = false
+    gGame.isFirstClick = true
+    gGame.isOn = true
+    gGame.lives = 3
+    gLevel.MINES = 0
+    gBoard = []
 }
 function buildBoard(size = gLevel.SIZE) {
     for (var i = 0; i < size; i++) {
@@ -94,19 +101,19 @@ function onCellClick(elCell, i, j) { //please excuse this absolute UNIT of a fun
         checkGameOver()
         return
     }
-    if(cell.isMarked&& !cell.isMine){
+    if (cell.isMarked && !cell.isMine) {
         onMark(elCell)
-        showCell(gBoard, i,j,elCell)
+        showCell(gBoard, i, j, elCell)
     }
     if (cell.isMarked || cell.isShown) return//prevents revealing makred cell and needlessly marking marked cell
     if (!cell.isShown) {//clicking a cell that isn't shown and isn't a mine
-        showCell(gBoard, i,j,elCell)
+        showCell(gBoard, i, j, elCell)
     }
     minesNegsCount(i, j)
     renderCell(i, j)
     checkGameOver()
 }
-function showCell(board, i,j, elCell){
+function showCell(board, i, j, elCell) {
     var cell = gBoard[i][j]
     gGame.shownCount++
     cell.isShown = true
@@ -146,12 +153,15 @@ function checkGameOver() {
         gGame.isOn = false
         gGame.isVictory = true
         updateLifeImage()
-        alert('victory!')
+        gElModal.style.visibility = 'visible'
+        gElModal.querySelector('span').innerText = 'Victory!'
     }
     if (gGame.lives === 0) {
         alert('loss')
         gGame.isVictory = false
         gGame.isOn = false
+        gElModal.style.visibility = 'visible'
+        gElModal.querySelector('span').innerText = 'Crushing defeat!'
     }
 }
 function updateLifeImage() {//handles change of face icon
@@ -200,11 +210,11 @@ function expandShown(board, row, col) {
         for (var j = col - 1; j <= col + 1; j++) {
             if (j < 0 || j > board[0].length - 1) continue
             if (i === row && j === col) continue
-            if(gBoard[i][j].isMarked) continue
+            if (gBoard[i][j].isMarked) continue
             if (gBoard[i][j].isMine) continue
             if (!gBoard[i][j].isShown) {
                 // debugger
-                if(gBoard[i][j].isMarked){
+                if (gBoard[i][j].isMarked) {
                     gGame.markedCount--
                 }
                 gBoard[i][j].isShown = true

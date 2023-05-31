@@ -23,7 +23,7 @@ function onMark(elCell) {
     }else{
         gGame.markedCount++
         cell.isMarked = true
-        if(cell.isMine || !cell.isShown) elCell.classList.remove('hidden')
+        if(!cell.isShown) elCell.classList.remove('hidden')
     }
     console.log('gGame.markedCount :', gGame.markedCount)
     renderCell(elCell.dataset.i, elCell.dataset.j)
