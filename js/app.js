@@ -153,7 +153,6 @@ function checkGameOver() {
         gElModal.querySelector('span').innerText = 'Victory!'
     }
     if (gGame.lives === 0) {
-        alert('loss')
         gGame.isVictory = false
         gGame.isOn = false
         gElModal.style.visibility = 'visible'
@@ -238,6 +237,8 @@ function setDifficulty() {
             gLevel.MINEPERCENTAGE = 22.222
             break;
         default:
+            gLevel.SIZE = 4
+            gLevel.MINEPERCENTAGE = 12.5
             break;
     }
 }
