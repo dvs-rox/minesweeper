@@ -1,42 +1,73 @@
 :root {
     --background-color: #0D1B1E;
-    --text-color: #ce6f83;
-    --table-bg-color: #276ebfb3;
+    --text-color: #5E5E5E;
+    --table-bg-color: #AD5F2D;
     --table-border-color: #183059;
 }
 
-.boardContainer{
+@font-face {
+    font-family: 'AmazDoom';
+    src:  url('../fonts/AmazDooMLeft.ttf') format('truetype'), url('fonts/EntezareZohoor2.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.boardContainer {
     /* padding-top: calc(1vh); */
+    border: 2px solid #BBCFD6;
     margin: auto;
     background-color: var(--table-bg-color);
     padding: 3px;
 }
-.infoTable{
+
+.infoTable {
     margin: auto auto 10px auto;
-    background-color: var(--table-bg-color);
+    background-color: transparent;
     color: var(--text-color);
-    font-size: 2em;
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+    border: 2px solid #BBCFD6;
 }
+
+.infoTable span span{
+    font-size: 2em;
+    overflow: visible;
+    text-shadow: 5px 5px 5px black;
+    
+}
+.lifeCounter {
+    line-height: 10px;
+    font-size: 40px;
+    overflow: visible;
+    vertical-align: bottom;
+    font-family: 'AmazDoom';
+}
+
 body {
     background-color: var(--background-color);
+    background-image: url('../img/background.jpg');
+    background-position: top left;
+    background-size: 120vw;
+    background-repeat: no-repeat;
+
 }
-td img{
-    width: 60px;
+
+td img {
+    width: 200px;
 }
-h1 {
+.lifecountDynamic{
+    width: 45px;
+}
+.title {
     color: var(--text-color);
     font-size: 40px;
-    font-family:Arial, Helvetica, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     font-weight: 800;
     font-style: italic;
     text-align: center;
     padding: 10px 10px 10px 10px;
-    text-shadow: 4px 3px 0px #7A7A7A;
     max-width: fit-content;
     margin: 10px auto 10px auto;
-    border-radius: 50%;
-    background-color: #F6F4F3;
+    background-color: #00d0ff8e;
+    border-radius: 20px;
 }
 
 .boardContainer tr td {

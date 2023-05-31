@@ -7,14 +7,18 @@
     <title>MineSweeper</title>
 </head>
 <body onload="onInit()">
-    <h1>Minesweeper</h1>
+    <div class="title"><img src="img/title.png" alt=""></div>
+    <div class="modal"></div>
     <table class="infoTable">
         <tr>
+            <td>
+                <img src="img/lives-count.png" alt="">
+            </td>
             <td title="Life counter, when it reaches 0 you lose">
-                lives left: <span class="lifeCounter">3</span>
+                 <span class="lifeCounter">3</span>
             </td>
             <td>
-                <img src="img/lifecount/3.png" alt="">
+                <img class="lifecountDynamic" src="img/lifecount/3.png" alt="">
             </td>
         </tr>
     </table>

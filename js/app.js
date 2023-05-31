@@ -128,22 +128,20 @@ function renderCell(i, j) {
 }
 function checkGameOver() {
     //if all empty cells are revealed and all mines are marked
-    if (gGame.markedCount >= gLevel.MINES && gGame.markedCount === (gLevel.SIZE ** 2 - gGame.shownCount)) {
-        debugger
+    if (gGame.markedCount >= gLevel.MINES && gGame.shownCount === (gBoard.size**2 - gLevel.MINES)) {
         gGame.isOn = false
         gGame.isVictory = true
         updateLifeImage()
         alert('victory!')
     }
     if (gGame.lives === 0) {
-        debugger
         alert('loss')
         gGame.isVictory = false
         gGame.isOn = false
     }
 }
 function updateLifeImage() {//handles change of face icon
-    var elImg = document.querySelector('td img')
+    var elImg = document.querySelector('.lifecountDynamic')
     console.log(gGame.isVictory)
     if (gGame.isVictory === true) {
         switch (gGame.lives) {
@@ -191,6 +189,9 @@ function expandShown(board, row, col) {
             if (gBoard[i][j].isMine) continue
             if (!gBoard[i][j].isShown) {
                 // debugger
+                if(gBoard[i][j].isMarked){
+                    gGame.markedCount--
+                }
                 gBoard[i][j].isShown = true
                 minesNegsCount(i, j)
                 renderCell(i, j)
