@@ -13,7 +13,8 @@ var gGame = {
     shownCount: 0,
     markedCount: 0,
     secsPassed: 0,
-    lives: 3
+    lives: 3,
+    isFirstClick: true
 }
 //reference for cell object structure
 // var cell ={
@@ -29,7 +30,6 @@ function onInit() {
     buildBoard()
     //build DOM
     renderBoard()
-    // plantRandomMines(gBoard)
 }
 function buildBoard(size = gLevel.SIZE) {
     for (var i = 0; i < size; i++) {
@@ -41,9 +41,9 @@ function buildBoard(size = gLevel.SIZE) {
                 isMine: false,
                 isMarked: false
             })
-            if (i % 2 === 0 && j % 2 === 0) {
-                gBoard[i][j].isMine = true
-            }
+            // if (i % 2 === 0 && j % 2 === 0) {
+            //     gBoard[i][j].isMine = true
+            // }
             // if(i===0&& j===0){
             //     gBoard[i][j].isMine = true
             // }
@@ -68,12 +68,20 @@ function renderBoard() {
 }
 function onCellClick(elCell, i, j) {
     //TODO: add scenarios for flagging, mines, empty spaces & counted neighbors
+    
+    if(gGame.isFirstClick) {
+        plantRandomMines(gBoard)
+        gBoard[i][j].isMine = false
+        gGame.isFirstClick = false
+    }
     var cell = gBoard[i][j]
     if (cell.isMine) {
         console.log('BOOM')
         elCell.classList.remove('hidden')
+        if (!cell.isShown) {
+            gGame.lives--
+        }
         cell.isShown = true
-        gGame.lives--
         renderCell(i, j)
         checkGameOver()
         return
@@ -116,7 +124,7 @@ function checkGameOver() {
     if (gGame.markedCount >= gLevel.MINES && gGame.markedCount === (gLevel.SIZE ** 2 - gGame.shownCount)) {
         alert('victory!')
     }
-    if(gGame.lives ===0){
+    if (gGame.lives === 0) {
         alert('loss')
     }
 }
