@@ -7,7 +7,7 @@
 //     isMine: false,
 //     isMarked: false
 // }
-addEventListener(`contextmenu`, (e) => { //prevents opening content menu while still allowing right click event to happen
+addEventListener(`contextmenu`, (e) => { //prevents opening context menu while still allowing right click event to happen
     e.preventDefault();
 });
 

@@ -45,11 +45,22 @@ function createMat(ROWS, COLS) {
     return mat
 }
 //shuffles array
-const shuffleArray = array => {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        const temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
-    }
-}
+function shuffle(array) {
+    array.sort(() => Math.random() - 0.5);
+  }
+
+// function getMineArray() {
+//     var minesBackup = gLevel.MINES
+//     var mineArray = []
+//     for (var i = 0; i < Math.pow(gLevel.SIZE, 2); i++) {
+//         if (minesBackup !== 0) {
+//             mineArray.push(MINE)
+//             minesBackup--
+//         }else{
+//             mineArray.push(EMPTY)
+//         }
+//     }
+//     shuffle(mineArray)
+//     console.log('mineArray :', mineArray)
+//     return mineArray
+// }

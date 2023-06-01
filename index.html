@@ -12,12 +12,15 @@
     <button onclick="onInit()">Restart?</button></div>
     <table class="infoTable">
         <tr>
-            <td colspan="2">
+            <td >
                 <select name="difficulty" id="difficulty">
                     <option value="easy">Easy</option>
                     <option value="medium">Medium</option>
                     <option value="hard">Hard</option>
                 </select>
+            </td>
+            <td class="hints" title="Hints, click to activate hint mode then click cell to reveal it's neighbors breifly" onclick="initHint()">
+                <span>💡</span><span>💡</span><span>💡</span> 
             </td>
             <td>
                 <button onclick="onInit()">Restart?</button>
@@ -46,6 +49,7 @@
     <script src="js/utils.js"></script>
     <script src="js/mine.js"></script>
     <script src="js/flag.js"></script>
+    <script src="js/bonusFeatures.js"></script>
     <link rel="stylesheet" href="css/main.css">
 </body>
 </html>

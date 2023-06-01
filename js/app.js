@@ -7,7 +7,7 @@ var gElModal = document.querySelector('.modal')
 var gBoard = []
 var gLevel = {
     SIZE: 6,
-    MINES: 0,
+    MINES: 2,
     MINEPERCENTAGE: 0
 }
 var gGame = {
@@ -17,14 +17,17 @@ var gGame = {
     secsPassed: 0,
     lives: 3,
     isFirstClick: true,
-    isVictory: false
+    isVictory: false,
+    hintCount: 3,
+    isHint: false
 }
 //reference for cell object structure
 // var cell ={
 //     minesAroundCount: 0,
 //     isShown: false,
 //     isMine: false,
-//     isMarked: false
+//     isMarked: false,
+//     isHinted: false
 // }
 
 
@@ -39,16 +42,22 @@ function onInit() {
     updateLifeImage()
 }
 function resetVars() {
+    //reset visibility of modal
     gElModal.style.visibility = 'hidden'
+
+    //reset gGame vars
     gGame.isVictory = false
     gGame.isFirstClick = true
     gGame.isOn = true
     gGame.lives = 3
-    gLevel.MINES = 0
+    gGame.markedCount = 0
+    gGame.hintCount = 3
+    //reset board
     gBoard = []
+
+    document.querySelector('.lifeCounter').innerText = gGame.lives
 }
 function buildBoard(size = gLevel.SIZE) {
-    console.log(gLevel.SIZE)
     for (var i = 0; i < size; i++) {
         gBoard.push([])
         for (var j = 0; j < size; j++) {
@@ -56,14 +65,9 @@ function buildBoard(size = gLevel.SIZE) {
                 minesAroundCount: 0,
                 isShown: false,
                 isMine: false,
-                isMarked: false
+                isMarked: false,
+                isHinted: false
             })
-            // if (i % 2 === 0 && j % 2 === 0) {
-            //     gBoard[i][j].isMine = true
-            // }
-            // if(i===0&& j===0){
-            //     gBoard[i][j].isMine = true
-            // }
         }
 
     }
@@ -82,21 +86,27 @@ function renderBoard() {
     document.querySelector(".boardContainer").innerHTML = strHtml
 }
 function onCellClick(elCell, i, j) { //please excuse this absolute UNIT of a function, it triggers most things and is nearly unreadable so I added tons of comments :^)
+    var cell = gBoard[i][j]
     if (!gGame.isOn) return
+    if (cell.isMarked || cell.isShown) return//prevents revealing makred cell and needlessly marking marked cell
+    if (gGame.isHint) {//if hint mode is activated
+        activateHint(gBoard, i, j)
+        gGame.isHint = false
+        return
+    }
     //scenarios for flagging, mines, empty spaces & counted neighbors
     if (gGame.isFirstClick) {//handles first turn not landing on a mine
+        gBoard[i][j].isShown = true
         plantRandomMines(gBoard)
-        gBoard[i][j].isMine = false
         gGame.isFirstClick = false
     }
-    var cell = gBoard[i][j]
     if (cell.isMine) { //clicked cell is mine scenario
         if (!cell.isShown && !cell.isMarked) { // prevents clicking revealed or flagged bomb reducing life count
             gGame.lives--
             gGame.markedCount++
             updateLifeImage()//changes face icon
         }
-        document.querySelector('td span').innerText = gGame.lives//updates lifecounter in DOM
+        document.querySelector('.lifeCounter').innerText = gGame.lives//updates lifecounter in DOM
         cell.isShown = true
         renderCell(i, j)
         checkGameOver()
@@ -106,20 +116,21 @@ function onCellClick(elCell, i, j) { //please excuse this absolute UNIT of a fun
         onMark(elCell)
         showCell(gBoard, i, j, elCell)
     }
-    if (cell.isMarked || cell.isShown) return//prevents revealing makred cell and needlessly marking marked cell
+
     if (!cell.isShown) {//clicking a cell that isn't shown and isn't a mine
         showCell(gBoard, i, j, elCell)
     }
-    minesNegsCount(i, j)
+    // minesNegsCount(i, j)
     renderCell(i, j)
     checkGameOver()
 }
 function showCell(board, i, j, elCell) {
     var cell = gBoard[i][j]
-    gGame.shownCount++
     cell.isShown = true
     elCell.classList.remove('.hidden')
-    expandShown(board, i, j)
+    if (board[i][j].minesAroundCount === 0) {
+        expandShown(board, i, j)
+    }
 }
 function renderCell(i, j) {
     var cell = gBoard[i][j]
@@ -131,6 +142,7 @@ function renderCell(i, j) {
     //if cell is marked, flag will be shown instead of mine
     if (cell.isMarked) {
         elCell.innerText = FLAG
+        return
     } else if (!cell.isMarked && !cell.isMine) {//if cell is not marked and is not a mine, empty inner text
         elCell.innerText = EMPTY
     }
@@ -143,9 +155,11 @@ function renderCell(i, j) {
     }
 }
 function checkGameOver() {
+    countShown()
     //if all empty cells are revealed and all mines are marked
-
-    if (gGame.markedCount === gLevel.MINES && gGame.shownCount === (Math.pow(gLevel.SIZE, 2) - gLevel.MINES)) {
+    console.log('gGame.shownCount :', gGame.shownCount)
+    if (gGame.markedCount === gLevel.MINES //marked all mines (works always)
+        && gGame.shownCount=== Math.pow(gLevel.SIZE, 2)) { //shown all other cells
         gGame.isOn = false
         gGame.isVictory = true
         updateLifeImage()
@@ -161,7 +175,6 @@ function checkGameOver() {
 }
 function updateLifeImage() {//handles change of face icon
     var elImg = document.querySelector('.lifecountDynamic')
-    console.log(gGame.isVictory)
     if (gGame.isVictory === true) {
         switch (gGame.lives) {
             case 3:
@@ -208,17 +221,21 @@ function expandShown(board, row, col) {
             if (gBoard[i][j].isMarked) continue
             if (gBoard[i][j].isMine) continue
             if (!gBoard[i][j].isShown) {
-                // debugger
-                if (gBoard[i][j].isMarked) {
-                    gGame.markedCount--
-                }
                 gBoard[i][j].isShown = true
-                minesNegsCount(i, j)
+                // minesNegsCount(i, j)
                 renderCell(i, j)
-                gGame.shownCount++
             }
         }
     }
+}
+function countShown() {
+    var count = 0
+    for (var i = 0; i < gBoard.length; i++) {
+        for (var j = 0; j < gBoard.length; j++) {
+            if(gBoard[i][j].isShown || gBoard[i][j].isMarked) count++
+        }
+    }
+    gGame.shownCount = count
 }
 function setDifficulty() {
     var elSelect = document.querySelector('select')
@@ -226,19 +243,19 @@ function setDifficulty() {
     switch (elSelect.value) {
         case 'easy':
             gLevel.SIZE = 4
-            gLevel.MINEPERCENTAGE = 12.5
+            gLevel.MINES = 2
             break;
         case 'medium':
             gLevel.SIZE = 8
-            gLevel.MINEPERCENTAGE = 21.875
+            gLevel.MINES = 14
             break;
         case 'hard':
             gLevel.SIZE = 12
-            gLevel.MINEPERCENTAGE = 22.222
+            gLevel.MINES = 32
             break;
         default:
             gLevel.SIZE = 4
-            gLevel.MINEPERCENTAGE = 12.5
+            gLevel.MINES = 2
             break;
     }
 }
