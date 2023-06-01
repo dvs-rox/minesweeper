@@ -6,26 +6,12 @@ function addMine(i, j) {//sets cell property isMine to true, does not render cel
     gBoard[i][j].isMine = true
 }
 function plantRandomMines(board) {
-    // var odds = gLevel.MINEPERCENTAGE/100 //odds a mine will be placed *!SOON TO BE REPLACED BY STATIC NUMBER!* math.rand is being too inconsistent
-    // var ratio = odds*gLevel.MINES
-    // var mineArray = getMineArray()
-    var count = 0
-    // for (var i = 0; i < board.length; i++) {
-    //     for (var j = 0; j < board.length; j++) {
-    //         // if(mineArray[count]===MINE){
-    //         //     board[i][j].isMine = true
-    //         // }
-    //         // // count++
-    //         if(Math.random()<=odds && !board[i][j].isShown){
-    //             board[i][j].isMine = true
-    //             gLevel.MINES++
-    //         }
-    //     }
-    // }
     var arr = []
     var mines = gLevel.MINES
-    for(var i =0; i<Math.pow(gLevel.SIZE,2);i++){
-        if(mines!==0){
+    console.log('mines :', mines)
+    for (var i = 0; i < Math.pow(gLevel.SIZE, 2)-1; i++) { //-1: when filling the board, the array is popped effectively once less than boardsize because of shown cell being ignored
+        if (mines !== 0) {
+
             arr.push({
                 minesAroundCount: 0,
                 isShown: false,
@@ -44,14 +30,16 @@ function plantRandomMines(board) {
             isHinted: false
         })
     }
-    for(var i =0; i<20;i++){//mix it up real good
+    for (var i = 0; i < 20; i++) {//mix it up real good
         shuffle(arr)
     }
+    console.log('arr :', arr)
     for (var i = 0; i < board.length; i++) {
         for (var j = 0; j < board.length; j++) {
-            if(board[i][j].isShown) continue
+            if (board[i][j].isShown) continue
             var cell = arr.pop()
-            if(cell.isMine===true){
+            debugger
+            if (cell.isMine === true) {
                 board[i][j].isMine = true
             }
         }

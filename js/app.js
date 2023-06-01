@@ -40,6 +40,7 @@ function onInit() {
     //build DOM
     renderBoard()
     updateLifeImage()
+    highScoreUpdate()
 }
 function resetVars() {
     //reset visibility of modal
@@ -52,6 +53,8 @@ function resetVars() {
     gGame.lives = 3
     gGame.markedCount = 0
     gGame.hintCount = 3
+
+    updateHintCount()
     //reset board
     gBoard = []
 
@@ -165,6 +168,7 @@ function checkGameOver() {
         updateLifeImage()
         gElModal.style.visibility = 'visible'
         gElModal.querySelector('span').innerText = 'Victory!'
+        highScoreUpdate()
     }
     if (gGame.lives === 0) {
         gGame.isVictory = false

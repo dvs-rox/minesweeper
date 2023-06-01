@@ -59,8 +59,8 @@
 body {
     background-color: var(--background-color);
     background-image: url('../img/background.jpg');
-    background-position:center;
-    background-size: auto 130vh;
+    background-position:top;
+    background-size: cover;
     background-repeat: no-repeat;
 
 }
@@ -118,4 +118,17 @@ footer {
 footer p {
     padding-top: calc((30px / 2) - (1em / 2));
     margin: auto;
+}
+.hints{
+    min-width: 50px;
+}
+.highScore{
+    box-sizing: border-box;
+    color: aliceblue;
+    background-color: #0D1B1E;
+    border: 3px solid white;
+    width: 200px;
+    margin-left: calc(50vw - 105px);
+    margin-top: 40px;
+    visibility: hidden;
 }
